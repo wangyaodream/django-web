@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-gvdnho!a@lc6y9tyy2n!(54bh41$1_%orrq)4njaf-(%i6i*(v
 DEBUG = True
 
 ALLOWED_HOSTS = [
-        "192.168.240.10"]
+        "*"]
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'polls'
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,15 @@ WSGI_APPLICATION = 'myweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'vote',
+        'HOST': os.getenv('MYSQL_HOST'),
+        'PORT': 3307,
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'CHARSET': 'utf8',
+        'TIME_ZONE': 'Asia/Chongqing',
+
     }
 }
 

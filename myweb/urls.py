@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from first.views import show_index
+from polls.views import show_subjects, show_teachers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', show_index),
+    path('', show_subjects),
+    path('teachers/', show_teachers)
 
 ]

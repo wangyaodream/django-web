@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.core.validators import MaxLengthValidator
 from django.db import models
 
 
@@ -33,3 +34,19 @@ class TbTeacher(models.Model):
     class Meta:
         managed = False
         db_table = 'tb_teacher'
+
+
+class User(models.Model):
+    """创建用户表"""
+    no = models.AutoField(primary_key=True, verbose_name='编号')
+    username = models.CharField(max_length=20, unique=True, verbose_name='用户名')
+    password = models.CharField(max_length=32, verbose_name='密码')
+    tel = models.CharField(max_length=20, verbose_name='手机号')
+    reg_date = models.DateTimeField(auto_now_add=True, verbose_name='注册时间')
+    last_visit = models.DateTimeField(null=True, verbose_name='最后登录时间')
+
+
+    class Meta:
+        db_table = 'tb_user'
+        verbose_name = '用户'
+        verbose_name_plural = '用户'

@@ -44,3 +44,7 @@ def praise_or_criticize(request):
         data = {'code': 20001, 'msg': '操作失败'}
     return JsonResponse(data)
 
+
+def login(request):
+    hint = ''
+    return render(request, 'login.html', {'hint': hint})

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 
 
 from polls.models import TbSubject, TbTeacher
@@ -25,3 +26,21 @@ def show_teachers(request):
             'teachers': teachers})
     except (ValueError, TbSubject.DoesNotExist):
         return redirect('/')
+
+
+def praise_or_criticize(request):
+    try:
+        tno = int(request.GET.get('tno'))
+        teacher = TbTeacher.objects.get(no=tno)
+        if request.path.startswith('/praise'):
+            teacher.gcount += 1
+            count = teacher.gcount
+        else:
+            teacher.bcount += 1
+            count = teacher.bcount
+        teacher.save()
+        data = {'code': 20000, 'msg': '操作成功', 'count': count}
+    except (ValueError, TbTeacher.DoesNotExist):
+        data = {'code': 20001, 'msg': '操作失败'}
+    return JsonResponse(data)
+

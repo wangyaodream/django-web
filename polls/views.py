@@ -4,6 +4,8 @@ from django.http import JsonResponse
 
 from polls.models import TbSubject, TbTeacher
 
+import utils
+
 # Create your views here.
 
 
@@ -48,3 +50,10 @@ def praise_or_criticize(request):
 def login(request):
     hint = ''
     return render(request, 'login.html', {'hint': hint})
+
+
+def get_captcha(request):
+    """验证码"""
+    captcha_text = utils.gen_random_code()
+    request.session['captcha'] = captcha_text
+    image_data = utils.Captcha.instance().generate(captcha_text)

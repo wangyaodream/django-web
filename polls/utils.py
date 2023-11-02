@@ -23,7 +23,6 @@ def gen_random_code(length=4):
 class Bezier:
     """贝塞尔曲线"""
 
-
     def __init__(self):
         self.tsequence = tuple([t / 20.0 for t in range(21)])
         self.beziers = {}
@@ -46,7 +45,6 @@ class Bezier:
 
 class Captcha:
     """验证码""" 
-
 
     def __init__(self, width, height, fonts=None, color=None):
         self._image = None
@@ -119,8 +117,7 @@ class Captcha:
             char_images.append(char_image)
         width, height = self._image.size
         offset = int((width - sum(int(i.size[0] * squeeze_factor)
-                                  for i in char_images[:-1]) -
-                                  char_images[-1].size[0])/2)
+                                  for i in char_images[:-1]) - char_images[-1].size[0])/2)
         for char_image in char_images:
             c_width, c_height = char_image.size
             mask = char_image.convert('L').point(lambda i: i * 1.97)
@@ -129,55 +126,55 @@ class Captcha:
                               mask)
             offset += int(c_width * squeeze_factor)
         
-        @staticmethod
-        def _wrap(image, dx_factor=3.0, dy_factor=0.3):
-            """图像扭曲"""
-            width, height = image.size
-            dx = width * dx_factor
-            dy = height * dy_factor
-            x1 = int(random.uniform(-dx, dx))
-            y1 = int(random.uniform(-dy, dy))
-            x2 = int(random.uniform(-dx, dx))
-            y2 = int(random.uniform(-dy, dy))
-            wrap_image = Image.new(
-                "RGB",
-                (width + abs(x1) + abs(x2), height + abs(y1) + abs(y2))
-            )
-            wrap_image.paste(image, (abs(x1), abs(y1)))
-            width2, height2 = wrap_image.size
-            return wrap_image.transform(
-                (width, height),
-                Image.QUAD,
-                (x1, y1, -x1, height2 - y2, width2 + x2, height2 + y2, width2 - x2, -y1)
-            )
-        
-        @staticmethod
-        def _offset(image, dx_factor=0.1, dy_factor=0.2):
-            """图像偏移"""
-            width, height = image.size
-            dx = int(random.random() * width * dx_factor)
-            dy = int(random.random() * height * dy_factor)
-            offset_image = Image.new('RGB', (width + dx, height + dy))
-            offset_image.paste(image, (dx, dy))
-            return offset_image
-        
-        @staticmethod
-        def _rotate(image, angle=25):
-            """图像旋转"""
-            return image.rotate(random.uniform(-angle, angle), Image.BILINEAR, expand=1)
-        
-        def generate(self, captcha_text='', fmt='PNG'):
-            """生成验证码"""
-            self._image = Image.new('RGB', (self._width, self._height), (255, 255, 255))
-            self._background()
-            self._text(captcha_text, self._fonts,
-                       draw)
-            self._curve()
-            self._noise()
-            self._smooth()
-            image_bytes = BytesIO()
-            self._image.save(image_bytes, format=fmt)
-            return image_bytes.getvalue()
+    @staticmethod
+    def _wrap(image, dx_factor=3.0, dy_factor=0.3):
+        """图像扭曲"""
+        width, height = image.size
+        dx = width * dx_factor
+        dy = height * dy_factor
+        x1 = int(random.uniform(-dx, dx))
+        y1 = int(random.uniform(-dy, dy))
+        x2 = int(random.uniform(-dx, dx))
+        y2 = int(random.uniform(-dy, dy))
+        wrap_image = Image.new(
+            "RGB",
+            (width + abs(x1) + abs(x2), height + abs(y1) + abs(y2))
+        )
+        wrap_image.paste(image, (abs(x1), abs(y1)))
+        width2, height2 = wrap_image.size
+        return wrap_image.transform(
+            (width, height),
+            Image.QUAD,
+            (x1, y1, -x1, height2 - y2, width2 + x2, height2 + y2, width2 - x2, -y1)
+        )
+
+    @staticmethod
+    def _offset(image, dx_factor=0.1, dy_factor=0.2):
+        """图像偏移"""
+        width, height = image.size
+        dx = int(random.random() * width * dx_factor)
+        dy = int(random.random() * height * dy_factor)
+        offset_image = Image.new('RGB', (width + dx, height + dy))
+        offset_image.paste(image, (dx, dy))
+        return offset_image
+
+    @staticmethod
+    def _rotate(image, angle=25):
+        """图像旋转"""
+        return image.rotate(random.uniform(-angle, angle), Image.BILINEAR, expand=1)
+
+    def generate(self, captcha_text='', fmt='PNG'):
+        """生成验证码"""
+        self._image = Image.new('RGB', (self._width, self._height), (255, 255, 255))
+        self._background()
+        self._text(captcha_text, self._fonts,
+                   drawings=['_wrap', '_rotate', '_offset'])
+        self._curve()
+        self._noise()
+        self._smooth()
+        image_bytes = BytesIO()
+        self._image.save(image_bytes, format=fmt)
+        return image_bytes.getvalue()
 
 
 def pascal_row(n=0):

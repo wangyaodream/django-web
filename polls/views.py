@@ -2,12 +2,19 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpRequest, HttpResponse
 
 
+from bpmappers.djangomodel import ModelMapper
 from polls.models import TbSubject, TbTeacher, User
 
 from polls import utils
 
 # Create your views here.
 
+class SubjectMapper(ModelMapper):
+
+    class Meta:
+        model = TbSubject
+        # 排除is_hot字段的内容
+        exclude = ('is_hot')
 
 def show_subjects(request):
     subjects = TbSubject.objects.all().order_by('no')
@@ -74,10 +81,18 @@ def get_captcha(request):
     captcha_text = utils.gen_random_code()
     request.session['captcha'] = captcha_text
     image_data = utils.Captcha.instance().generate(captcha_text)
-
+    return HttpResponse(image_data, content_type='image/png')
 
 def logout(request):
     """注销"""
     request.session.flush()
     return redirect('/')
+
+
+def show_subjects(request: HttpRequest) -> HttpResponse:
+    queryset = TbSubject.objects.all()
+    subjects = []
+    for subject in queryset:
+        subjects.append(SubjectMapper(subject).as_dict())
+    return JsonResponse(subjects, safe=False)
 

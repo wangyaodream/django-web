@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from first.views import show_index
-from polls.views import show_subjects, show_teachers, praise_or_criticize, login, logout
+from polls.views import show_subjects, show_teachers, praise_or_criticize, login, logout, show_subjects
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +28,5 @@ urlpatterns = [
     path('criticize/', praise_or_criticize),
     path('login/', login),
     path('logout/', logout),
+    path('api/show_subjects', show_subjects)
 ]
